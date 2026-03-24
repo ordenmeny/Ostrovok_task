@@ -1,8 +1,6 @@
 from fastapi import FastAPI
+from blog_app.api.router import router as blog_router
 
 app = FastAPI()
 
-@app.get("/")
-async def hello_world():
-    return {"response": "Hello, world!"}
-
+app.include_router(blog_router)
