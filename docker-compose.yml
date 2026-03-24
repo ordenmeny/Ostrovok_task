@@ -1,26 +1,28 @@
 services:
   postgres:
     image: postgres:16
-    container_name: postgres16_em
+    container_name: postgres16_ostrovok
     restart: always
     env_file:
-      - blog_app/.env
+      - .env
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
     ports:
       - ${DB_PORT}:${DB_PORT}
     volumes:
       - pgdata:/var/lib/postgresql/data
 
   app:
+    container_name: fastapi_app
     build:
       context: .
       dockerfile: blog_app/Dockerfile
     restart: always
     env_file:
-      - blog_app/.env
+      - .env
     ports:
       - "8000:8000"
     depends_on:
@@ -29,14 +31,14 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: fastapi_redis
+    container_name: redis_ostrovok
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     env_file:
-      - blog_app/.env
+      - .env
     command:
       - sh
       - -c
@@ -44,10 +46,10 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin4_selectel
+    container_name: pgadmin4_ostrovok
     restart: always
     env_file:
-      - blog_app/.env
+      - .env
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}

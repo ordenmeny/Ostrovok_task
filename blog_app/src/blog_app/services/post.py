@@ -1,6 +1,9 @@
 from fastapi import HTTPException, status
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 from blog_app.api.crud import (
     create_post as create_post_db,
@@ -39,8 +42,10 @@ async def get_post_by_id(
 ) -> PostRead:
     cached_post = await get_cached_post(redis, post_id)
     if cached_post is not None:
+        logger.warning("Получен пост из кэша")
         return cached_post
 
+    logger.warning("Получен пост НЕ из кэша")
     post = await get_post_by_id_db(session, post_id)
     if post is None:
         raise HTTPException(
