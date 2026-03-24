@@ -1,0 +1,16 @@
+[project]
+name = "ostrovok-task"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "black>=26.3.1",
+    "blog-app",
+]
+
+[tool.uv.workspace]
+members = [
+    "blog_app",
+]
+
+[tool.uv.sources]
+blog-app = { workspace = true }
